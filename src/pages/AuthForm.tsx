@@ -1,5 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../components/AuthContext';
 type FormData = {
   email: string;
   password: string;
@@ -7,6 +10,8 @@ type FormData = {
 };
 
 const AuthForm: React.FC = () => {
+  const navigate = useNavigate()
+  const {login} = useAuth()
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({ email: '', password: '', confirmPassword: '' });
 
@@ -15,12 +20,39 @@ const AuthForm: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log('Logging in with:', formData);
-    } else {
-      console.log('Registering with:', formData);
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      console.log('Пароли не совпадают'); 
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        const response = await axios.post('http://localhost:5000/api/login', {
+          email: formData.email,
+          password: formData.password
+        });
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        const decoded: {userId: string} = jwtDecode(token)
+        console.log('Декодированный токен:', decoded);
+        console.log('UserId:', decoded.userId);
+        login(decoded.userId)
+        navigate('/hotels');
+      } else {
+        const response = await axios.post('http://localhost:5000/api/register', {
+          email: formData.email,
+          password: formData.password
+        });
+        setIsLogin(true)
+        console.log('Успешная регистрация', response.data);
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Что-то пошло не так. Пожалуйста, попробуйте снова.');
     }
   };
 

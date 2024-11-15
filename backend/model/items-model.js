@@ -1,6 +1,5 @@
-// models/items-model.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../utils/database');  // Убедись, что путь правильный
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../utils/database');
 
 const Item = sequelize.define('Item', {
     name: {
@@ -15,9 +14,9 @@ const Item = sequelize.define('Item', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
-    availability: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
