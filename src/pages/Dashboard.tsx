@@ -27,10 +27,6 @@ const Dashboard: React.FC = () => {
           <>
             <p className="mb-6">Добро пожаловать!</p>
             <div className="space-y-4">
-              <div className="p-4 bg-white shadow-sm rounded-md">
-                <h2 className="text-xl font-semibold">Ваши бронирования</h2>
-                <p className="text-gray-700">Здесь будет список ваших бронирований...</p>
-              </div>
               <button
                 onClick={handleLogout}
                 className="w-full py-2 px-4 bg-black text-white rounded-md hover:bg-gray-800 transition"

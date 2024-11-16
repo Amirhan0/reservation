@@ -36,6 +36,7 @@ const Bookings: React.FC = () => {
     }
   };
 
+  
   const deleteBooking = async (id: number) => {
     try {
       await axios.delete(`http://localhost:5000/api/bookings/${id}`);
